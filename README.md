@@ -32,7 +32,7 @@ inquirer
         },
         {
           name: "Legs",
-          value: "data"
+          value: "legs"
         },
         {
           name: "Cardio",
@@ -76,6 +76,10 @@ inquirer
     }
   ])
   .then(answers => {
+    /*
+    { workoutPlan:
+      [ 'arms', 'legs', 'cardio', undefined, 'legs', 'arms', undefined ] }    
+    */
     console.log(answers);
   });
 ```
