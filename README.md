@@ -1,4 +1,4 @@
-# inquirer-table-prompt
+# inquirer-table-prompt [![npm version](https://badge.fury.io/js/inquirer-table-prompt.svg)](https://badge.fury.io/js/inquirer-table-prompt)
 
 > A table-like prompt for [Inquirer.js](https://github.com/SBoudrias/Inquirer.js)
 
