@@ -8,7 +8,7 @@ const Paginator = require("inquirer/lib/utils/paginator");
 const Table = require("cli-table");
 const { map, takeUntil } = require("rxjs/operators");
 
-class MatrixSelectPrompt extends Base {
+class TablePrompt extends Base {
   /**
    * Initialise the prompt
    *
@@ -25,14 +25,14 @@ class MatrixSelectPrompt extends Base {
     this.rows = new Choices(this.opt.rows, []);
     this.values = this.columns.filter(() => true).map(() => undefined);
 
-    this.paginator = new Paginator(this.screen);
+    this.pageSize = this.opt.pageSize || 5;
   }
 
   /**
    * Start the inquirer session
    *
    * @param  {Function} callback
-   * @return {MatrixSelectPrompt}
+   * @return {TablePrompt}
    */
   _run(callback) {
     this.done = callback;
@@ -87,7 +87,7 @@ class MatrixSelectPrompt extends Base {
   onDownKey() {
     const length = this.rows.realLength;
 
-    this.pointer = this.pointer < length - 1 ? this.pointer + 1 : 0;
+    this.pointer = this.pointer < length - 1 ? this.pointer + 1 : this.pointer;
     this.render();
   }
 
@@ -131,10 +131,20 @@ class MatrixSelectPrompt extends Base {
   }
 
   onUpKey() {
-    const length = this.rows.realLength;
-
-    this.pointer = this.pointer > 0 ? this.pointer - 1 : length - 1;
+    this.pointer = this.pointer > 0 ? this.pointer - 1 : this.pointer;
     this.render();
+  }
+
+  paginate() {
+    const middleOfPage = Math.floor(this.pageSize / 2);
+    const firstIndex = Math.max(0, this.pointer - middleOfPage);
+    const lastIndex = Math.min(
+      firstIndex + this.pageSize - 1,
+      this.rows.realLength - 1
+    );
+    const firstPageOffset = this.pageSize - 1 - lastIndex + firstIndex;
+
+    return [firstIndex - firstPageOffset, lastIndex];
   }
 
   render(error) {
@@ -152,13 +162,18 @@ class MatrixSelectPrompt extends Base {
         " to move columns)";
     }
 
+    const [firstIndex, lastIndex] = this.paginate();
     const table = new Table({
-      head: [""].concat(
-        this.columns.pluck("name").map(name => chalk.reset.bold(name))
-      )
+      head: [
+        chalk.reset.dim(
+          `${firstIndex + 1}-${lastIndex + 1} of ${this.rows.realLength}`
+        )
+      ].concat(this.columns.pluck("name").map(name => chalk.reset.bold(name)))
     });
 
     this.rows.forEach((row, rowIndex) => {
+      if (rowIndex < firstIndex || rowIndex > lastIndex) return;
+
       const columnValues = [];
 
       this.columns.forEach((column, columnIndex) => {
@@ -196,4 +211,4 @@ class MatrixSelectPrompt extends Base {
   }
 }
 
-module.exports = MatrixSelectPrompt;
+module.exports = TablePrompt;
