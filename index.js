@@ -193,7 +193,7 @@ class TablePrompt extends Base {
 
       const chalkModifier =
         this.status !== "answered" && this.pointer === rowIndex
-          ? chalk.reset.bold
+          ? chalk.reset.bold.cyan
           : chalk.reset;
 
       table.push({
