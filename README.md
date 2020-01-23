@@ -88,3 +88,4 @@ inquirer
 
 - `columns`: Array of options to display as columns. Follows the same format as Inquirer's `choices`
 - `rows`: Array of options to display as rows. Follows the same format as Inquirer's `choices`
+- `pageSize`: Number of rows to display per page
