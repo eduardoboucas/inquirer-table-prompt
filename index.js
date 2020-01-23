@@ -142,9 +142,9 @@ class TablePrompt extends Base {
       firstIndex + this.pageSize - 1,
       this.rows.realLength - 1
     );
-    const firstPageOffset = this.pageSize - 1 - lastIndex + firstIndex;
+    const lastPageOffset = this.pageSize - 1 - lastIndex + firstIndex;
 
-    return [firstIndex - firstPageOffset, lastIndex];
+    return [Math.max(0, firstIndex - lastPageOffset), lastIndex];
   }
 
   render(error) {
