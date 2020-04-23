@@ -6,7 +6,7 @@
 
 ## Installation
 
-```
+```bash
 npm install --save inquirer-table-prompt
 ```
 
@@ -45,32 +45,27 @@ inquirer
       ],
       rows: [
         {
-          name: "Monday",
-          value: 0
+          name: "Monday"
         },
         {
           name: "Tuesday",
-          value: 1
+          default: "legs"
         },
         {
-          name: "Wednesday",
-          value: 2
+          name: "Wednesday"
         },
         {
-          name: "Thursday",
-          value: 3
+          name: "Thursday"
         },
         {
           name: "Friday",
-          value: 4
+          default: "legs"
         },
         {
-          name: "Saturday",
-          value: 5
+          name: "Saturday"
         },
         {
-          name: "Sunday",
-          value: 6
+          name: "Sunday"
         }
       ]
     }
@@ -78,7 +73,7 @@ inquirer
   .then(answers => {
     /*
     { workoutPlan:
-      [ 'arms', 'legs', 'cardio', undefined, 'legs', 'arms', undefined ] }    
+      [ 'arms', 'legs', 'cardio', undefined, 'legs', 'arms', undefined ] }
     */
     console.log(answers);
   });
