@@ -22,7 +22,7 @@ class TablePrompt extends Base {
     this.columns = new Choices(this.opt.columns, []);
     this.pointer = 0;
     this.rows = new Choices(this.opt.rows, []);
-    this.values = this.columns.filter(() => true).map(() => undefined);
+    this.values = this.rows.filter(() => true).map(() => undefined)
 
     this.pageSize = this.opt.pageSize || 5;
   }
@@ -42,16 +42,6 @@ class TablePrompt extends Base {
     );
     validation.success.forEach(this.onEnd.bind(this));
     validation.error.forEach(this.onError.bind(this));
-
-    // events.keypress.forEach(({ key }) => {
-    //   switch (key.name) {
-    //     case "left":
-    //       return this.onLeftKey();
-
-    //     case "right":
-    //       return this.onRightKey();
-    //   }
-    // });
 
     events.normalizedUpKey
       .pipe(takeUntil(validation.success))
@@ -74,13 +64,7 @@ class TablePrompt extends Base {
   }
 
   getCurrentValue() {
-    const currentValue = [];
-
-    this.rows.forEach((row, rowIndex) => {
-      currentValue.push(this.values[rowIndex]);
-    });
-
-    return currentValue;
+    return [...new Set(this.values)].filter((j) => j != null)
   }
 
   onDownKey() {
@@ -105,26 +89,17 @@ class TablePrompt extends Base {
     this.render(state.isValid);
   }
 
-  // onLeftKey() {
-  //   const length = this.columns.realLength;
-
-  //   this.horizontalPointer =
-  //     this.horizontalPointer > 0 ? this.horizontalPointer - 1 : length - 1;
-  //   this.render();
-  // }
-
-  // onRightKey() {
-  //   const length = this.columns.realLength;
-
-  //   this.horizontalPointer =
-  //     this.horizontalPointer < length - 1 ? this.horizontalPointer + 1 : 0;
-  //   this.render();
-  // }
-
   onSpaceKey() {
+    const isSet = this.values[this.pointer]
     const value = this.rows.get(this.pointer).value;
 
-    this.values[this.pointer] = value;
+    // toggle
+    if (isSet) {
+      this.values[this.pointer] = undefined;
+    } else {
+      this.values[this.pointer] = value;
+    }
+
     this.spaceKeyPressed = true;
     this.render();
   }
@@ -170,16 +145,14 @@ class TablePrompt extends Base {
       const columnValues = [];
 
       this.columns.forEach((column, columnIndex) => {
-        const isSelected =
-          this.status !== "answered" &&
-          this.pointer === rowIndex
+        const isSelected = this.pointer === rowIndex
 
-        const value = isSelected
+        const value = this.values[rowIndex]
             ? figures.radioOn
             : figures.radioOff;
 
         let cellValue
-        if (columnIndex == 0) {
+        if (columnIndex == 0) { // the first column is the radiobutton column
           cellValue = `${isSelected ? "[" : " "} ${value} ${isSelected ? "]" : " "}`
         } else {
           cellValue = row[column.name] || ''
@@ -193,11 +166,10 @@ class TablePrompt extends Base {
         columnValues.push(chalkModifier(cellValue))
       })
 
-
       table.push(columnValues);
     });
 
-    message += "\n\n" + table.toString();
+    message += '\n\n' + table.toString();
     if (this.opt.bottomContent) {
       bottomContent = this.opt.bottomContent + '\n'
     }

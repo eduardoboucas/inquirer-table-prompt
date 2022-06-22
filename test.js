@@ -29,33 +29,33 @@ inquirer
       ],
       rows: [
         {
-          value: 0,
+          value: 'a',
           Arms: "some thing 1",
           Legs: "some thing 2"
         },
         {
-          value: 1,
+          value: 'b',
           Arms: "some thing 3",
           Legs: "some thing 4"
         },
         {
-          value: 2,
+          value: 'c',
           Arms: "some thing 5",
           Legs: "some thing 6"
         },
         {
-          value: 3,
+          value: 'd',
           Arms: "some thing 7",
           Legs: "some thing 8",
           Cardio: "some cardio"
         },
         {
-          value: 4,
+          value: 'e',
           Arms: "some thing 9",
           Legs: "some thing 10"
         },
         {
-          value: 5,
+          value: 'f',
           Arms: "some thing 11",
           Legs: "some thing 12"
         }
