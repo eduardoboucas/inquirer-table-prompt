@@ -9,6 +9,8 @@ inquirer
       name: "select template",
       bottomContent: "some bottom content",
       message: "Choose the template you want",
+      wordWrap: true,
+      colWidths: [ 10, 10, 10, 10],
       columns: [
         { 
           name: "Select",

@@ -135,9 +135,19 @@ class TablePrompt extends Base {
     }
 
     const [firstIndex, lastIndex] = this.paginate();
-    const table = new Table({
+    const tableOptions = {
       head: this.columns.pluck("name").map(name => chalk.reset.bold(name))
-    });
+    }
+
+    if (this.opt.wordWrap) {
+      tableOptions.wordWrap = this.opt.wordWrap
+    }
+
+    if (this.opt.colWidths) {
+      tableOptions.colWidths = this.opt.colWidths
+    }
+
+    const table = new Table(tableOptions);
 
     this.rows.forEach((row, rowIndex) => {
       if (rowIndex < firstIndex || rowIndex > lastIndex) return;
