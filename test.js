@@ -10,6 +10,7 @@ inquirer
       bottomContent: "some bottom content",
       message: "Choose the template you want",
       wordWrap: true,
+      wrapOnWordBoundary: false,
       colWidths: [ 10, 10, 10, 10],
       columns: [
         { 
