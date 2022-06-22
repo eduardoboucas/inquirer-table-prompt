@@ -5,7 +5,7 @@ const Base = require("inquirer/lib/prompts/base");
 const Choices = require("inquirer/lib/objects/choices");
 const observe = require("inquirer/lib/utils/events");
 const Paginator = require("inquirer/lib/utils/paginator");
-const Table = require("cli-table");
+const Table = require("cli-table3");
 const { map, takeUntil } = require("rxjs/operators");
 
 class TablePrompt extends Base {
@@ -21,7 +21,6 @@ class TablePrompt extends Base {
 
     this.columns = new Choices(this.opt.columns, []);
     this.pointer = 0;
-    this.horizontalPointer = 0;
     this.rows = new Choices(this.opt.rows, []);
     this.values = this.columns.filter(() => true).map(() => undefined);
 
@@ -44,15 +43,15 @@ class TablePrompt extends Base {
     validation.success.forEach(this.onEnd.bind(this));
     validation.error.forEach(this.onError.bind(this));
 
-    events.keypress.forEach(({ key }) => {
-      switch (key.name) {
-        case "left":
-          return this.onLeftKey();
+    // events.keypress.forEach(({ key }) => {
+    //   switch (key.name) {
+    //     case "left":
+    //       return this.onLeftKey();
 
-        case "right":
-          return this.onRightKey();
-      }
-    });
+    //     case "right":
+    //       return this.onRightKey();
+    //   }
+    // });
 
     events.normalizedUpKey
       .pipe(takeUntil(validation.success))
@@ -106,24 +105,24 @@ class TablePrompt extends Base {
     this.render(state.isValid);
   }
 
-  onLeftKey() {
-    const length = this.columns.realLength;
+  // onLeftKey() {
+  //   const length = this.columns.realLength;
 
-    this.horizontalPointer =
-      this.horizontalPointer > 0 ? this.horizontalPointer - 1 : length - 1;
-    this.render();
-  }
+  //   this.horizontalPointer =
+  //     this.horizontalPointer > 0 ? this.horizontalPointer - 1 : length - 1;
+  //   this.render();
+  // }
 
-  onRightKey() {
-    const length = this.columns.realLength;
+  // onRightKey() {
+  //   const length = this.columns.realLength;
 
-    this.horizontalPointer =
-      this.horizontalPointer < length - 1 ? this.horizontalPointer + 1 : 0;
-    this.render();
-  }
+  //   this.horizontalPointer =
+  //     this.horizontalPointer < length - 1 ? this.horizontalPointer + 1 : 0;
+  //   this.render();
+  // }
 
   onSpaceKey() {
-    const value = this.columns.get(this.horizontalPointer).value;
+    const value = this.rows.get(this.pointer).value;
 
     this.values[this.pointer] = value;
     this.spaceKeyPressed = true;
@@ -157,18 +156,12 @@ class TablePrompt extends Base {
         chalk.cyan.bold("<space>") +
         " to select, " +
         chalk.cyan.bold("<Up and Down>") +
-        " to move rows, " +
-        chalk.cyan.bold("<Left and Right>") +
-        " to move columns)";
+        " to move rows)";
     }
 
     const [firstIndex, lastIndex] = this.paginate();
     const table = new Table({
-      head: [
-        chalk.reset.dim(
-          `${firstIndex + 1}-${lastIndex + 1} of ${this.rows.realLength}`
-        )
-      ].concat(this.columns.pluck("name").map(name => chalk.reset.bold(name)))
+      head: this.columns.pluck("name").map(name => chalk.reset.bold(name))
     });
 
     this.rows.forEach((row, rowIndex) => {
@@ -179,32 +172,38 @@ class TablePrompt extends Base {
       this.columns.forEach((column, columnIndex) => {
         const isSelected =
           this.status !== "answered" &&
-          this.pointer === rowIndex &&
-          this.horizontalPointer === columnIndex;
-        const value =
-          column.value === this.values[rowIndex]
+          this.pointer === rowIndex
+
+        const value = isSelected
             ? figures.radioOn
             : figures.radioOff;
 
-        columnValues.push(
-          `${isSelected ? "[" : " "} ${value} ${isSelected ? "]" : " "}`
-        );
-      });
+        let cellValue
+        if (columnIndex == 0) {
+          cellValue = `${isSelected ? "[" : " "} ${value} ${isSelected ? "]" : " "}`
+        } else {
+          cellValue = row[column.name] || ''
+        }
 
-      const chalkModifier =
+        const chalkModifier =
         this.status !== "answered" && this.pointer === rowIndex
           ? chalk.reset.bold.cyan
           : chalk.reset;
 
-      table.push({
-        [chalkModifier(row.name)]: columnValues
-      });
+        columnValues.push(chalkModifier(cellValue))
+      })
+
+
+      table.push(columnValues);
     });
 
     message += "\n\n" + table.toString();
+    if (this.opt.bottomContent) {
+      bottomContent = this.opt.bottomContent + '\n'
+    }
 
     if (error) {
-      bottomContent = chalk.red(">> ") + error;
+      bottomContent += '\n' + chalk.red(">> ") + error;
     }
 
     this.screen.render(message, bottomContent);
