@@ -11,6 +11,7 @@ inquirer
       message: "Choose the template you want",
       wordWrap: true,
       wrapOnWordBoundary: false,
+      style: { 'padding-left': 0, 'padding-right': 0, head: [], border: [] },
       colWidths: [ 10, 10, 10, 10],
       columns: [
         { 

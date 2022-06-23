@@ -136,7 +136,9 @@ class TablePrompt extends Base {
 
     const [firstIndex, lastIndex] = this.paginate();
     const tableOptions = {
-      head: this.columns.pluck("name").map(name => chalk.reset.bold(name))
+      // head: this.columns.pluck("name").map(name => chalk.reset.bold(name)),
+      head: this.columns.pluck("name").map(name => name),
+      style: {}
     }
     
     if (this.opt.wrapOnWordBoundary === false) {
@@ -151,6 +153,10 @@ class TablePrompt extends Base {
       tableOptions.colWidths = this.opt.colWidths
     }
 
+    if (this.opt.style) {
+      tableOptions.style = { ...tableOptions.style, ...this.opt.style }
+    }
+
     const table = new Table(tableOptions);
 
     this.rows.forEach((row, rowIndex) => {
@@ -161,13 +167,16 @@ class TablePrompt extends Base {
       this.columns.forEach((column, columnIndex) => {
         const isSelected = this.pointer === rowIndex
 
-        const value = this.values[rowIndex]
-            ? figures.radioOn
-            : figures.radioOff;
+        let value
+        if (this.values[rowIndex]) {
+          value = figures.radioOn
+        } else {
+          value = figures.radioOff
+        }
 
         let cellValue
-        if (columnIndex == 0) { // the first column is the radiobutton column
-          cellValue = `${isSelected ? "[" : " "} ${value} ${isSelected ? "]" : " "}`
+        if (columnIndex === 0) { // the first column is the radiobutton column
+          cellValue = `[ ${value} ]`
         } else {
           cellValue = row[column.name] || ''
         }
@@ -177,7 +186,11 @@ class TablePrompt extends Base {
           ? chalk.reset.bold.cyan
           : chalk.reset;
 
-        columnValues.push(chalkModifier(cellValue))
+        if (columnIndex === 0 && isSelected) {
+          columnValues.push(chalk.blue(cellValue))
+        } else {
+          columnValues.push(cellValue)
+        }
       })
 
       table.push(columnValues);
