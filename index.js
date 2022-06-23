@@ -139,7 +139,7 @@ class TablePrompt extends Base {
       head: this.columns.pluck("name").map(name => chalk.reset.bold(name))
     }
     
-    if (this.opt.wrapOnWordBoundary) {
+    if (this.opt.wrapOnWordBoundary === false) {
       tableOptions.wrapOnWordBoundary = this.opt.wrapOnWordBoundary
     }
 
