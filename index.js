@@ -19,10 +19,14 @@ class TablePrompt extends Base {
   constructor(questions, rl, answers) {
     super(questions, rl, answers);
 
+    // add column for select radiobutton, and column width
+    this.opt.columns.unshift({ name: "", value: undefined });
+    this.opt.colWidths.unshift(6);
+
     this.columns = new Choices(this.opt.columns, []);
     this.pointer = 0;
     this.rows = new Choices(this.opt.rows, []);
-    this.values = this.rows.filter(() => true).map(() => undefined)
+    this.values = this.rows.filter(() => true).map(() => undefined);
 
     this.pageSize = this.opt.pageSize || 5;
   }
@@ -64,7 +68,8 @@ class TablePrompt extends Base {
   }
 
   getCurrentValue() {
-    return [...new Set(this.values)].filter((j) => j != null)
+    // return only unique and defined values
+    return [...new Set(this.values)].filter(j => j != null);
   }
 
   onDownKey() {
@@ -90,7 +95,7 @@ class TablePrompt extends Base {
   }
 
   onSpaceKey() {
-    const isSet = this.values[this.pointer]
+    const isSet = this.values[this.pointer];
     const value = this.rows.get(this.pointer).value;
 
     // toggle
@@ -139,22 +144,22 @@ class TablePrompt extends Base {
       // head: this.columns.pluck("name").map(name => chalk.reset.bold(name)),
       head: this.columns.pluck("name").map(name => name),
       style: {}
-    }
-    
+    };
+
     if (this.opt.wrapOnWordBoundary === false) {
-      tableOptions.wrapOnWordBoundary = this.opt.wrapOnWordBoundary
+      tableOptions.wrapOnWordBoundary = this.opt.wrapOnWordBoundary;
     }
 
     if (this.opt.wordWrap) {
-      tableOptions.wordWrap = this.opt.wordWrap
+      tableOptions.wordWrap = this.opt.wordWrap;
     }
 
     if (this.opt.colWidths) {
-      tableOptions.colWidths = this.opt.colWidths
+      tableOptions.colWidths = this.opt.colWidths;
     }
 
     if (this.opt.style) {
-      tableOptions.style = { ...tableOptions.style, ...this.opt.style }
+      tableOptions.style = { ...tableOptions.style, ...this.opt.style };
     }
 
     const table = new Table(tableOptions);
@@ -165,44 +170,59 @@ class TablePrompt extends Base {
       const columnValues = [];
 
       this.columns.forEach((column, columnIndex) => {
-        const isSelected = this.pointer === rowIndex
+        const isSelected = this.pointer === rowIndex;
 
-        let value
+        let value;
         if (this.values[rowIndex]) {
-          value = figures.radioOn
+          value = figures.radioOn;
         } else {
-          value = figures.radioOff
+          value = figures.radioOff;
         }
 
-        let cellValue
-        if (columnIndex === 0) { // the first column is the radiobutton column
-          cellValue = `[ ${value} ]`
+        let cellValue;
+        if (columnIndex === 0) {
+          // the first column is the radiobutton column
+          cellValue = isSelected ? `${figures.pointer}${value}` : ` ${value}`;
         } else {
-          cellValue = row[column.name] || ''
+          cellValue = row[column.name] || "";
         }
 
         const chalkModifier =
-        this.status !== "answered" && this.pointer === rowIndex
-          ? chalk.reset.bold.cyan
-          : chalk.reset;
+          this.status !== "answered" && this.pointer === rowIndex
+            ? chalk.reset.bold.cyan
+            : chalk.reset;
 
-        if (columnIndex === 0 && isSelected) {
-          columnValues.push(chalk.blue(cellValue))
+        const { wordWrap = false, wrapOnWordBoundary = true } = tableOptions;
+        const {
+          wordWrap: columnWordWrap = wordWrap,
+          wrapOnWordBoundary: columnWrapOnWordBoundary = wrapOnWordBoundary
+        } = this.opt.columns[columnIndex]; // cell overrides
+
+        if (columnIndex === 0) {
+          // no wordWrap in the select column
+          columnValues.push({
+            content: isSelected ? chalk.blue(cellValue) : cellValue,
+            wordWrap: false
+          });
         } else {
-          columnValues.push(cellValue)
+          columnValues.push({
+            content: cellValue,
+            wordWrap: columnWordWrap,
+            wrapOnWordBoundary: columnWrapOnWordBoundary
+          });
         }
-      })
+      });
 
       table.push(columnValues);
     });
 
-    message += '\n\n' + table.toString();
+    message += "\n\n" + table.toString();
     if (this.opt.bottomContent) {
-      bottomContent = this.opt.bottomContent + '\n'
+      bottomContent = this.opt.bottomContent + "\n";
     }
 
     if (error) {
-      bottomContent += '\n' + chalk.red(">> ") + error;
+      bottomContent += "\n" + chalk.red(">> ") + error;
     }
 
     this.screen.render(message, bottomContent);

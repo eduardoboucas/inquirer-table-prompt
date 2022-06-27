@@ -1,4 +1,4 @@
-const inquirer = require('inquirer')
+const inquirer = require("inquirer");
 
 inquirer.registerPrompt("table", require("./index"));
 
@@ -9,22 +9,21 @@ inquirer
       name: "select template",
       bottomContent: "some bottom content",
       message: "Choose the template you want",
-      wordWrap: true,
+      wordWrap: false,
       wrapOnWordBoundary: false,
-      style: { 'padding-left': 0, 'padding-right': 0, head: [], border: [] },
-      colWidths: [ 10, 10, 10, 10],
+      pageSize: 3,
+      style: { "padding-left": 1, "padding-right": 0, head: [], border: [] },
+      colWidths: [30, 10, 10],
       columns: [
-        { 
-          name: "Select",
-          value: undefined
-        },
         {
           name: "Arms",
-          value: "arms"
+          value: "arms",
+          wrapOnWordBoundary: true
         },
         {
           name: "Legs",
-          value: "legs"
+          value: "legs",
+          wrapOnWordBoundary: false
         },
         {
           name: "Cardio",
@@ -33,33 +32,33 @@ inquirer
       ],
       rows: [
         {
-          value: 'a',
-          Arms: "some thing 1",
+          value: "a",
+          Arms: "some thing 1 that is really really long long",
           Legs: "some thing 2"
         },
         {
-          value: 'b',
+          value: "b",
           Arms: "some thing 3",
           Legs: "some thing 4"
         },
         {
-          value: 'c',
+          value: "c",
           Arms: "some thing 5",
           Legs: "some thing 6"
         },
         {
-          value: 'd',
+          value: "d",
           Arms: "some thing 7",
           Legs: "some thing 8",
           Cardio: "some cardio"
         },
         {
-          value: 'e',
+          value: "e",
           Arms: "some thing 9",
           Legs: "some thing 10"
         },
         {
-          value: 'f',
+          value: "f",
           Arms: "some thing 11",
           Legs: "some thing 12"
         }
