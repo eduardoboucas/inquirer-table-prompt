@@ -12,7 +12,7 @@ on:
         default: 'latest'
 jobs:
   checkout:
-    if: github.repository == 'adobe/aio-cli-plugin-app'
+    if: github.repository == 'adobe/inquirer-table-checkbox'
     name: checkout
     runs-on: ubuntu-latest
     steps:
