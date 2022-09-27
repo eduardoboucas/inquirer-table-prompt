@@ -1,0 +1,10 @@
+{
+  "extends": "@adobe/eslint-config-aio-lib-config",
+  "globals": {
+  },
+  "settings": {
+      "jsdoc": {
+          "ignorePrivate": true
+      }
+  }
+}
