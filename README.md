@@ -1,4 +1,4 @@
-# inquirer-table-prompt [![npm version](https://badge.fury.io/js/inquirer-table-prompt.svg)](https://badge.fury.io/js/inquirer-table-prompt)
+# inquirer-table-checkbox [![npm version](https://badge.fury.io/js/inquirer-table-checkbox.svg)](https://badge.fury.io/js/inquirer-table-checkbox)
 
 > A table-like prompt for [Inquirer.js](https://github.com/SBoudrias/Inquirer.js)
 
@@ -6,8 +6,8 @@
 
 ## Installation
 
-```
-npm install --save inquirer-table-prompt
+```sh
+npm install --save inquirer-table-checkbox
 ```
 
 ## Usage
