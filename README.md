@@ -57,7 +57,8 @@ inquirer
           value: "spacex",
           URL: "https://en.wikipedia.org/wiki/SpaceX",
           Description:
-            "Space Exploration Technologies Corp. (doing business as SpaceX) is an American spacecraft manufacturer, space launch provider, and a satellite communications corporation headquartered in Hawthorne, California. SpaceX was founded in 2002 by Elon Musk, with the goal of reducing space transportation costs to enable the colonization of Mars. SpaceX manufactures the Falcon 9 and Falcon Heavy launch vehicles, several rocket engines, Cargo Dragon, crew spacecraft, and Starlink communications satellites."
+            "Space Exploration Technologies Corp. (doing business as SpaceX) is an American spacecraft manufacturer, space launch provider, and a satellite communications corporation headquartered in Hawthorne, California. SpaceX was founded in 2002 by Elon Musk, with the goal of reducing space transportation costs to enable the colonization of Mars. SpaceX manufactures the Falcon 9 and Falcon Heavy launch vehicles, several rocket engines, Cargo Dragon, crew spacecraft, and Starlink communications satellites.",
+          disabled: true
         },
         {
           value: "starlink",
@@ -109,8 +110,9 @@ Each Column is an object with these keys:
 
 Each Row is an object with these keys:
 
-| Key          | Type   | Description                                                                        |
-|--------------|--------|------------------------------------------------------------------------------------|
-| value        | any    | this is the value to be returned if the row was selected                           |
-| *ColumnName* | string | for each column `name` (see [Column](#Column) section above),                      |
-|              |        | set the key as the column `name` and the value as the column contents for the row. |
+| Key          | Type    | Description                                                                        |
+|--------------|---------|------------------------------------------------------------------------------------|
+| value        | any     | this is the value to be returned if the row was selected                           |
+| disabled     | boolean | display the option, but do not allow the user to select it                         |
+| *ColumnName* | string  | for each column `name` (see [Column](#Column) section above),                      |
+|              |         | set the key as the column `name` and the value as the column contents for the row. |

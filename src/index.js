@@ -16,9 +16,22 @@ class TablePrompt extends Base {
     this.opt.colWidths.unshift(6)
 
     this.columns = new Choices(this.opt.columns, [])
-    this.pointer = 0
     this.rows = new Choices(this.opt.rows, [])
     this.values = this.rows.filter(() => true).map(() => undefined)
+
+    // Bail if no enabled rows
+    const enabledRows = this.opt.rows.filter(row => !row.disabled)
+    if (enabledRows.length <= 0) {
+      this.onEnd()
+    }
+
+    // Set starting pointer to first valid row
+    this.pointer = 0
+    if (this.rows.length > 0) {
+      if (this.rows.get(this.pointer).disabled) {
+        this.pointer = this.findNextRow(1)
+      }
+    }
 
     this.pageSize = this.opt.pageSize || 5
   }
@@ -58,10 +71,28 @@ class TablePrompt extends Base {
     return [...new Set(this.values)].filter(j => j != null)
   }
 
-  onDownKey () {
-    const length = this.rows.realLength
+  /**
+   * Given an offset, find the next enabled row, starting
+   * at the current pointer position.
+   *
+   * @param {number} offset Search offset
+   * @returns {number} Pointer to next enabled row
+   */
+  findNextRow (offset) {
+    let newPointer = this.pointer
+    let selectedOption
+    const length = this.rows.length
 
-    this.pointer = this.pointer < length - 1 ? this.pointer + 1 : this.pointer
+    while (!selectedOption || selectedOption.disabled) {
+      newPointer =
+        (newPointer + offset + length) % length
+      selectedOption = this.rows.get(newPointer)
+    }
+    return newPointer
+  }
+
+  onDownKey () {
+    this.pointer = this.findNextRow(1)
     this.render()
   }
 
@@ -96,7 +127,7 @@ class TablePrompt extends Base {
   }
 
   onUpKey () {
-    this.pointer = this.pointer > 0 ? this.pointer - 1 : this.pointer
+    this.pointer = this.findNextRow(-1)
     this.render()
   }
 
@@ -105,7 +136,7 @@ class TablePrompt extends Base {
     const firstIndex = Math.max(0, this.pointer - middleOfPage)
     const lastIndex = Math.min(
       firstIndex + this.pageSize - 1,
-      this.rows.realLength - 1
+      this.rows.length - 1
     )
     const lastPageOffset = this.pageSize - 1 - lastIndex + firstIndex
 
@@ -158,10 +189,15 @@ class TablePrompt extends Base {
         const isSelected = this.pointer === rowIndex
 
         let value
-        if (this.values[rowIndex]) {
-          value = figures.radioOn
+
+        if (row.disabled) {
+          value = '-'
         } else {
-          value = figures.radioOff
+          if (this.values[rowIndex]) {
+            value = figures.radioOn
+          } else {
+            value = figures.radioOff
+          }
         }
 
         let cellValue

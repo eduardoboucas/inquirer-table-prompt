@@ -25,7 +25,8 @@
   },
   "scripts": {
     "test": "npm run eslint",
-    "eslint": "eslint src"
+    "eslint": "eslint src",
+    "eslint-fix": "eslint src --fix"
   },
   "repository": {
     "type": "git",
