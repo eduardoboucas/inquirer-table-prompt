@@ -90,7 +90,7 @@ inquirer
 | wordWrap           | boolean (false)      | set to true whether to wordWrap items in the table              |
 | wrapOnWordBoundary | boolean (true)       | set to false if you don't want to wrap on a word boundary.      |
 |                    |                      | Only applies when wordWrap is true.                             |
-| pageSize           | integer              | the number of rows to show per page                             |
+| pageSize           | integer (5)          | the number of rows to show per page                             |
 | style              | object               | see https://github.com/cli-table/cli-table3 for styles to apply |
 | colWidths          | array&lt;integer&gt; | size of each column in `columns`                                |
 | columns            | array&lt;Column&gt;  | see [Column](#Column)                                           |
