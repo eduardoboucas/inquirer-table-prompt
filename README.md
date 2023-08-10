@@ -15,7 +15,7 @@
 ## Installation
 
 ```sh
-npm install --save inquirer-table-checkbox
+npm install --save @adobe/inquirer-table-checkbox
 ```
 
 ## Usage
