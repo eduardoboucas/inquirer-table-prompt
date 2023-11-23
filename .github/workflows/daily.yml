@@ -10,7 +10,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [14, 16]
+        node-version: [18.x, 20.x]
         os: [ubuntu-latest]
 
     steps:
@@ -29,6 +29,6 @@ jobs:
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_TITLE: 'Node version'
-        SLACK_MESSAGE: ${{ matrix.node }}
+        SLACK_MESSAGE: ${{ matrix.node-version }}
         SLACK_COLOR: ${{ job.status == 'success' && 'good' || job.status == 'cancelled' && '#808080' || 'danger' }}
 

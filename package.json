@@ -47,6 +47,6 @@
   },
   "homepage": "https://github.com/adobe/inquirer-table-checkbox#readme",
   "engines": {
-    "node": "^14.18 || ^16.13 || >=18"
+    "node": ">=18"
   }
 }
