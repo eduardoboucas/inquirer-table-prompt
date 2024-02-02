@@ -7,15 +7,4 @@ on:
       - 'package.json'
 jobs:
   publish:
-    if: github.repository == 'adobe/inquirer-table-checkbox'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 18
-      - run: npm install
-      - run: npm test
-      - uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.ADOBE_BOT_NPM_TOKEN }}
+    uses: adobe/aio-reusable-workflows/.github/workflows/on-push-publish-to-npm.yml@main
