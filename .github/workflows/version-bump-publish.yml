@@ -13,3 +13,4 @@ on:
 jobs:
   checkout:
     uses: adobe/aio-reusable-workflows/.github/workflows/version-bump-publish.yml@main
+    secrets: inherit

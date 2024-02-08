@@ -8,3 +8,4 @@ on:
 jobs:
   publish:
     uses: adobe/aio-reusable-workflows/.github/workflows/on-push-publish-to-npm.yml@main
+    secrets: inherit
