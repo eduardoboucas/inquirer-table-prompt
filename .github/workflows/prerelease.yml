@@ -1,0 +1,17 @@
+name: publish-prerelease
+on:
+  workflow_dispatch:
+    inputs:
+      pre-release-tag:
+        description: 'The pre-release tag use in the version'
+        required: false
+        default: 'pre'
+      dist-tag:
+        description: 'The dist-tag use'
+        required: false
+        default: 'next'
+
+jobs:
+  checkout:
+    uses: adobe/aio-reusable-workflows/.github/workflows/prerelease.yml@main
+    secrets: inherit

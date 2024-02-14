@@ -1,0 +1,16 @@
+name: version-bump-publish
+on:
+  workflow_dispatch:
+    inputs:
+      level:
+        description: '<newversion> | major | minor | patch | premajor | preminor | prepatch | prerelease'
+        required: true
+        default: 'patch'
+      tag:
+        description: 'The tag to publish to.'
+        required: false
+        default: 'latest'
+jobs:
+  checkout:
+    uses: adobe/aio-reusable-workflows/.github/workflows/version-bump-publish.yml@main
+    secrets: inherit
